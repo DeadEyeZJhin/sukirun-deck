@@ -1369,8 +1369,10 @@ document.getElementById('notesBtn')?.addEventListener('click',
 // ?short or ?full in the address wins, then what this browser chose last, then Full
 let startSet = /[?&]short/.test(location.search) ? 'short' : /[?&]full/.test(location.search) ? 'full' : null;
 if (!startSet){ try { startSet = localStorage.getItem('suki-set'); } catch(e){} }
+// read #n BEFORE applySet(), which goes to slide 1 and rewrites the hash on its way
+const startAt = (parseInt(location.hash.slice(1)) - 1) || 0;
 applySet(startSet === 'short' ? 'short' : 'full', false);
-go((parseInt(location.hash.slice(1)) - 1) || 0);
+go(startAt);
 
 /* deep links: index.html#7 jumps to slide 7 without a reload */
 addEventListener('hashchange', () => {
