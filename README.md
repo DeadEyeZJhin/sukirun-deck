@@ -1,35 +1,40 @@
-# SukiRun — presentation
+# SukiRun — presentation and live demo
 
-A 19-slide portfolio presentation of **SukiRun**, an offline-first order-taking app for field
-sales agents. Static page — no build step, no framework, no server required.
+**Live:** [deadeyezjhin.github.io/sukirun-deck](https://deadeyezjhin.github.io/sukirun-deck/) ·
+**Demo:** [deadeyezjhin.github.io/sukirun-deck/demo](https://deadeyezjhin.github.io/sukirun-deck/demo/)
 
-Same deck engine as the Network Build presentation: navigation, light/dark theme, speaker
-notes, print-to-PDF, deep links and the constellation background. The topology diagrams,
-traffic-flow animation and queue simulator are not carried over — this deck shows screenshots.
+A 25-slide portfolio presentation of **SukiRun**, written for the people who run a business,
+not for developers: what the app does for them, screen by screen, and how the same approach
+fits other kinds of business. Static page — no build step, no framework, no server required.
+
+**Short / Full** (top right, or `?short` / `?full` in the address): Short is the 12 slides to
+say out loud in a room; Full adds the eight business scenarios and the rest, for reading.
+
+**The demo** is the real app with every server address removed and an invented company
+preloaded — see *The demo* below.
 
 ## Contents
 
 | Slide | Covers |
 |---|---|
-| 01 Cover | What it is, in one line, with the badges |
-| 02 Agenda | The three questions the deck answers |
-| 03 The problem | The order typed out three times — notebook, Messenger, warehouse |
-| 04 What it is | One HTML file, two runtimes, five roles |
-| 05 The one job | The phone handed across the counter, and what that decided |
-| 06 Taking an order | Three screenshots, start to finish |
-| 07 The paste | The copied text as a designed artefact, and the three decisions in it |
-| 08 Offline-first | Queue, storage tiers, what works with no signal |
-| 09 Merge | Per-row merge, tombstones, the versioned `REPAIR_ID` repair |
-| 10 Roles and access | Row-level security, `security definer` writes, who sees what |
-| 11 The catalogue | 200+ products, four selling units, the frozen price |
-| 12 Shops and visits | The round, and who has gone quiet |
-| 13 Pictures and maps | Both working with no connection |
-| 14 The office | The list, undo-is-not-cancel, what-changed |
-| 15 Shipping it | One HTML file → signed APK → GitHub Releases |
-| 16 What I did not build | The parked features, each with the number that parked it |
-| 17 By the numbers | Measured out of the code, not remembered |
-| 18 Stack | Front end, back end, build and ship |
-| 19 Thank you | Contact, other work |
+| 01 Cover | One app instead of three spreadsheets and a group chat |
+| 02 Before | The order typed three times; the office's spreadsheets |
+| 03 After | Each spreadsheet, and the screen that replaced it |
+| 04 Login and roles | Accounts, five roles, enforced by the database |
+| 05 Products | The catalogue with pictures; change once, hide don't delete |
+| 06 Groups | The agent's folders and the office's group management |
+| 07 Nothing forgotten | Add product's missing-field check; the Missing something tab |
+| 08 Taking an order | Pick, check, send — three phone screens |
+| 09 Full status | The four-step bar and the who-and-when timeline |
+| 10 Dashboard | Admin → Orders on a PC |
+| 11 Daily sales and quota | The agent's month and week; the boss's view of any agent |
+| 12 Sync | Phone ⇄ database ⇄ PC, with no signal in the shop |
+| 13 Next: receipt to stock | Not built — print a receipt, stock goes down, 0 hides it |
+| 14 Any business | The five lists every business keeps |
+| 15–22 Scenarios | Distributor · store · food · service · delivery · clinic · construction · rental: the work in five steps, today, what I'd build, what carries over |
+| 23 Keep your spreadsheet | The app reads and writes a Google Sheet; one place to type each list; move one list at a time |
+| 24 How I work | Measure first; what I chose not to build; the numbers |
+| 25 Thank you | Contact |
 
 ## Controls
 
@@ -47,9 +52,26 @@ Deep links work: `index.html#13` opens slide 13.
 
 ## Screenshots
 
-Ten screenshots go in `assets/screens/`. Until they exist, each slot shows a dashed frame
-naming the file it wants. `assets/screens/README.md` lists every file, which screen it comes
-from, and what to cover up before shooting — most of these screens carry real shop names.
+`assets/screens/` holds the 15 used by the deck. Every one shows an **invented** company
+(Demo Distribution Co.), invented shops, invented people and invented orders. They were
+taken from the real app in a throwaway headless Chrome whose every request to the database
+was answered locally, so no demo row could reach the real server. Products are the 76 that
+ship inside the public APK. Phone shots are 560 px wide; office shots are 1380 px wide,
+and the two `-zoom` files are cropped to the part the slide is about.
+
+## The demo
+
+`demo/index.html` is generated, never edited by hand:
+
+```
+python make_demo.py            # reads D:\Order Run\sukirun.built.html
+```
+
+It blanks the server address, its key and the update address (with no server the app skips
+login, opens all five roles and keeps every save in the browser), renames the company,
+runs `demo-src/seed.js` before the app to load the invented shops and a month of orders
+dated relative to today, and adds a strip with **Reset demo**. It refuses to write the file
+if the server address survives anywhere in it. Re-run it after each app release.
 
 ## Files
 

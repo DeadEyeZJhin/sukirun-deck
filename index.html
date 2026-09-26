@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SukiRun — an order app for where there is no signal</title>
-<meta name="description" content="An offline-first order-taking app for field sales agents: one HTML file, five roles, Postgres row-level security, conflict-safe sync and a signed Android build. Portfolio presentation by Guile Pitogo.">
+<title>SukiRun — one app instead of the spreadsheets</title>
+<meta name="description" content="SukiRun: a workplace app for a distributor's field agents and office — products with pictures, groups, orders with a full status trail, a sales dashboard, quotas, roles and sync between phone and PC. And how the same approach fits other businesses. Portfolio presentation by Guile Pitogo.">
 <link rel="icon" href="assets/suki-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fredoka:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=4">
+<link rel="stylesheet" href="deck.css?v=21">
 </head>
 <body>
 
@@ -20,10 +20,13 @@
 <header class="topbar">
   <div class="brand">
     <img src="assets/suki-icon.png" alt="">
-    <div>SukiRun<small>Offline order app · field sales</small></div>
+    <div>SukiRun<small>A workplace app, not a spreadsheet</small></div>
   </div>
   <div class="spacer"></div>
-  <span class="counter" id="counter"><b>01</b> / 21</span>
+  <div class="deckswitch" title="Short: the 12 slides to present. Full: everything, to read.">
+    <button class="btn" data-set="short">Short</button><button class="btn" data-set="full">Full</button>
+  </div>
+  <span class="counter" id="counter"><b>01</b> / 25</span>
   <button class="btn" id="notesBtn" title="Toggle speaker notes (N)">
     <svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg><span>Notes</span>
   </button>
@@ -46,504 +49,570 @@
 <main class="deck" id="deck">
 
 <!-- ═══════════ 01 · COVER ═══════════ -->
-<section class="slide" data-title="Cover">
+<section class="slide" data-title="Cover" data-short>
   <div class="wrap appsplit">
     <div>
-      <span class="eyebrow"><img class="icn tint" style="width:13px;height:13px" src="assets/star.png" alt="">Android + Web · one HTML file</span>
-      <h1>An order app for where there is <span class="grad">no signal</span>.</h1>
-      <p class="sub" style="max-width:56ch">A field sales agent walks into a sari-sari store, adds the order up on the phone in front of the shopkeeper, and sends it to the office. Half the places they go have no signal, so everything works offline and syncs later.</p>
+      <span class="eyebrow"><img class="icn tint" style="width:13px;height:13px" src="assets/star.png" alt="">Android · PC · works with no signal</span>
+      <h1>One app instead of <span class="grad">three spreadsheets</span> and a group chat.</h1>
+      <p class="sub" style="max-width:58ch">I build apps for the way a workplace actually runs. SukiRun is one: a distributor's field agents take orders on their phones, the office runs everything from a PC, and both see the same thing.</p>
       <div class="cover-badges">
-        <span class="pill">Offline-first</span>
-        <span class="pill">Supabase · Postgres · RLS</span>
-        <span class="pill">Conflict-safe merge</span>
-        <span class="pill">55 releases</span>
-        <span class="pill">4.7 MB APK</span>
+        <span class="pill acc">Products with pictures</span>
+        <span class="pill">Groups</span>
+        <span class="pill">Full order status</span>
+        <span class="pill">Sales dashboard</span>
+        <span class="pill">Quotas</span>
+        <span class="pill">Roles &amp; login</span>
+        <span class="pill good">Phone ⇄ PC sync</span>
       </div>
-      <p class="sub" style="margin-top:24px;font-size:13.5px">
+      <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="try" href="https://deadeyezjhin.github.io/sukirun-deck/demo/" target="_blank" rel="noopener">▶ Try the app — live demo</a>
+      </div>
+      <p class="sub" style="margin-top:18px;font-size:13.5px">
         <b>Guile Pitogo</b> · Bacolod City, Negros Occidental<br>
         <span class="mono">deadeyezjhin.github.io</span> · <span class="mono">guile.pitogo@gmail.com</span>
       </p>
     </div>
     <div class="shot">
-      <div class="frame todo" data-shot="cover.png">assets/screens/<br>cover.png</div>
-      <div class="cap"><b>The order screen</b>Where the job actually happens</div>
+      <div class="frame todo" data-shot="order-form.png">order-form.png</div>
+      <div class="cap"><b>Taking an order</b>The pictures, the prices, the total — in the shop</div>
     </div>
   </div>
-  <div class="speaker"><b>Speaker</b>Open on the problem, not the stack. The app is a calculator you can hand to a shopkeeper — everything technical exists to keep that one moment honest.</div>
+  <div class="speaker"><b>Speaker</b>Open with what they get, not how it was built. Every slide after this is one thing a boss asks about: products, groups, status, the dashboard, the agents' numbers, who can log in, and how the phone and the PC stay in step.</div>
 </section>
 
-<!-- ═══════════ 02 · AGENDA ═══════════ -->
-<section class="slide" data-title="Agenda">
-  <div class="wrap">
-    <span class="eyebrow">What this covers</span>
-    <h2>Twenty-one slides, three questions</h2>
-    <p class="sub">What the work looked like before · what the app does about it · what it took to build.</p>
-    <div class="grid g3">
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/info.png" alt=""><h3>The problem</h3></div>
-        <ul class="clean">
-          <li>Orders read off a phone and retyped by hand</li>
-          <li>No signal in half the shops</li>
-          <li>The total worked out twice, by two people</li>
-        </ul></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>The app, screen by screen</h3></div>
-        <ul class="clean">
-          <li>Taking an order, start to finish</li>
-          <li>The paste that goes in the group chat</li>
-          <li>Shops, the map, the day, the office</li>
-        </ul></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/gear.png" alt=""><h3>The engineering</h3></div>
-        <ul class="clean">
-          <li>Offline-first sync and conflict merge</li>
-          <li>Roles enforced in the database, not the screen</li>
-          <li>One HTML file to a signed APK</li>
-          <li>What I chose <b>not</b> to build</li>
-        </ul></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 03 · THE PROBLEM ═══════════ -->
-<section class="slide" data-title="The problem">
+<!-- ═══════════ 02 · BEFORE ═══════════ -->
+<section class="slide" data-title="Before" data-short>
   <div class="wrap">
     <span class="eyebrow">Before</span>
-    <h2>The order was typed out <span class="grad">three times</span></h2>
-    <p class="sub">A distributor in Bacolod City. Field agents visit sari-sari stores and take orders for noodles and confectionery.</p>
-    <div class="grid g3">
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>In the shop</h3></div>
-        <p class="sub" style="margin:0">Items written in a notebook, the total worked out on a phone calculator. If the shopkeeper changed their mind, the whole column was added up again.</p></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>In the group chat</h3></div>
-        <p class="sub" style="margin:0">The same order typed into Messenger, numbered by hand — <span class="mono">1. …</span>, <span class="mono">2. …</span> — while standing in the street.</p></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>At the warehouse</h3></div>
-        <p class="sub" style="margin:0">Read off Messenger and retyped again to be picked and packed. Three chances for a number to change on the way.</p></div>
-    </div>
-    <div class="note" style="margin-top:16px">
-      <b>The lesson that generalises:</b> anything that makes somebody redo work by hand is worth killing. That is the whole brief.
-    </div>
-  </div>
-  <div class="speaker"><b>Speaker</b>Do not oversell this. The app did not replace a system — there was no system. It replaced a notebook and a calculator.</div>
-</section>
-
-<!-- ═══════════ 04 · WHAT IT IS ═══════════ -->
-<section class="slide" data-title="What it is">
-  <div class="wrap appsplit">
-    <div>
-      <span class="eyebrow">Shape of the thing</span>
-      <h2>One HTML file, two runtimes, five roles</h2>
-      <div class="grid g2" style="margin-top:14px">
-        <div class="card"><div class="cardhead"><img class="icn mono" src="assets/layer-up.png" alt=""><h3>One file, two runtimes</h3></div>
-          <ul class="clean">
-            <li>Markup, styles, logic and product photographs inlined into a single HTML document by a Python build script</li>
-            <li>No framework, no bundler, no runtime dependency</li>
-            <li><b>Android</b> — that file in a WebView wrapper, signed, 4.7 MB</li>
-            <li><b>Browser</b> — the office opens the same build on a desktop</li>
-          </ul></div>
-        <div class="card"><div class="cardhead"><img class="icn mono" src="assets/crown.png" alt=""><h3>Five roles, one account</h3></div>
-          <ul class="clean">
-            <li>Field Agent — visits shops, takes orders</li>
-            <li>Store owner — orders directly</li>
-            <li>Admin / Secretary — reviews, calls, confirms</li>
-            <li>Warehouse — products, prices, pictures</li>
-            <li>Delivery — packs and delivers</li>
-          </ul></div>
-      </div>
-    </div>
-    <div class="shot">
-      <div class="frame todo" data-shot="roles.png">assets/screens/<br>roles.png</div>
-      <div class="cap"><b>The door</b>What the account is allowed to be</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 05 · PICK THE PRODUCTS ═══════════ -->
-<section class="slide" data-title="Pick the products">
-  <div class="wrap appsplit">
-    <div>
-      <span class="eyebrow">Step one</span>
-      <h2>Pick the products</h2>
-      <p class="sub" style="max-width:60ch">Two hundred products, a photograph on every card, and a running total that never leaves the bottom of the screen. The phone is often in the shopkeeper's hands, so the grid has to be readable by someone who has never seen the app.</p>
-      <ul class="clean" style="margin-top:6px">
-        <li><b>This shop</b> puts what they bought last time at the top — then <b>Best sellers</b>, <b>Grouped</b>, <b>Default</b>, and a search box.</li>
-        <li>Type a quantity or tap <span class="mono">−</span> / <span class="mono">+</span>. A redraw never steals the keyboard mid-entry.</li>
-        <li>The form is <b>blank every time</b>. Nothing carries over from the last shop, because a shopkeeper must never see another shop's order.</li>
-        <li>A price the office changes while the form is open updates the card <b>and</b> says so at the top. Typed quantities survive.</li>
-      </ul>
-    </div>
-    <div class="shot">
-      <div class="frame todo" data-shot="order-form.png">assets/screens/<br>order-form.png</div>
-      <div class="cap"><b>New Order — Store Visit</b>Photo grid, typed quantities</div>
-    </div>
-  </div>
-  <div class="speaker"><b>Speaker</b>Anyone can add a cart to a page. The interesting work is what happens when the data moves while a stranger is holding the phone.</div>
-</section>
-
-<!-- ═══════════ 06 · THE BASKET ═══════════ -->
-<section class="slide" data-title="The basket">
-  <div class="wrap appsplit">
-    <div>
-      <span class="eyebrow">Step two</span>
-      <h2>Check the basket</h2>
-      <p class="sub" style="max-width:60ch">The running-total bar opens the basket. Every line is editable without leaving it, and each line carries its own unit.</p>
-      <ul class="clean" style="margin-top:6px">
-        <li><b>Sold as</b> — the same product by piece, pack, box or case. The unit and the price are frozen onto the line, so a price list rewritten next month cannot rewrite what a shopkeeper agreed to today.</li>
-        <li>Quantities change in place; only the numbers refresh, so the list never jumps under a thumb.</li>
-        <li>Three ways out: <b>Send order to office</b>, <b>Keep adding</b>, or <b>Copy order summary</b> — with the paste number beside it.</li>
-      </ul>
-    </div>
-    <div class="shot">
-      <div class="frame todo" data-shot="cart.png">assets/screens/<br>cart.png</div>
-      <div class="cap"><b>Your order</b>Every line editable, each with its own unit</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 07 · SEND OR COPY ═══════════ -->
-<section class="slide" data-title="Send or copy">
-  <div class="wrap appsplit">
-    <div>
-      <span class="eyebrow">Step three</span>
-      <h2>Send it, or copy it, or both</h2>
-      <p class="sub" style="max-width:60ch">The summary, then the shop's details, then the way out. The order comes first and the paperwork comes after — the form used to open on five empty boxes, with the thing you are actually doing underneath them.</p>
-      <ul class="clean" style="margin-top:6px">
-        <li><b>Send order to office</b> writes it locally first and queues it. A dead zone never costs an order.</li>
-        <li>Send with a detail missing and the form glides down and puts that box in the middle of the screen, instead of jumping.</li>
-        <li><b>Nothing is silent.</b> Walk away half-done and an amber card follows you onto every screen, naming the shop, until you send it, clear it, or throw it away.</li>
-      </ul>
-    </div>
-    <div class="shot">
-      <div class="frame todo" data-shot="summary.png">assets/screens/<br>summary.png</div>
-      <div class="cap"><b>Order summary</b>Then the shop details, then out</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 08 · THE PASTE ═══════════ -->
-<section class="slide" data-title="The paste">
-  <div class="wrap">
-    <span class="eyebrow">The feature that gets used most</span>
-    <h2>The paste <span class="grad">is</span> the product</h2>
-    <p class="sub">What actually leaves the app is a Messenger message. Some agents never press Send at all — they add the order up, copy it, paste it in the group chat, and that was the visit. So the copied text is a designed artefact, not a debug dump.</p>
-    <div class="grid g2">
-      <div class="card">
-        <div class="cardhead"><img class="icn mono" src="assets/star.png" alt=""><h3>What Copy summary produces</h3></div>
-<pre class="mono" style="margin:0;font-size:12.4px;line-height:1.65;white-space:pre-wrap;color:var(--text)">3. Aling Nena Store
-Contact: Nena Santos (09XX XXX XXXX)
-Address: Purok 3, Barangay Alijis — beside the chapel
-
-Misua 45g x3 Pack = ₱153
-Taochiam 45g x3 Pack = ₱153
-Molo Taochiam x10 Pack = ₱240
-TOTAL: ₱546</pre>
-      </div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/gear.png" alt=""><h3>Three decisions in that block</h3></div>
-        <ul class="clean">
-          <li><b>No map link.</b> A <span class="mono">maps.google.com</span> URL unfurls in Messenger into a preview card that buries the order it was attached to. Removed after watching it happen.</li>
-          <li><b>The leading number.</b> The group chat numbers orders by hand; on a phone that means scrolling the message box back to the top after pasting. The app types it, with a <span class="mono">‹ 3 ›</span> stepper beside the button.</li>
-          <li><b>One generator.</b> Every copy, share and report path runs through the same function, so two screens can never drift apart.</li>
-        </ul></div>
-    </div>
-  </div>
-  <div class="speaker"><b>Speaker</b>The number is stored on the phone only — never synced, never sent to the office. It is where this phone got to today, not a fact about the order.</div>
-</section>
-
-<!-- ═══════════ 09 · OFFLINE ═══════════ -->
-<section class="slide" data-title="Offline-first">
-  <div class="wrap">
-    <span class="eyebrow">The hard part</span>
-    <h2>Offline-first, not offline-tolerant</h2>
-    <p class="sub">Every write lands on the phone first and is queued. The network is an optimisation, never a precondition.</p>
+    <h2>The same order was typed <span class="grad">three times</span></h2>
+    <p class="sub">A distributor in Bacolod City. Field agents visit sari-sari stores and take orders for noodles, sauces and sweets.</p>
     <div class="grid g4">
-      <div class="card tight"><div class="kpi acc">1</div><div class="lbl">Write hits local storage — the order exists</div></div>
-      <div class="card tight"><div class="kpi acc">2</div><div class="lbl">Queued as dirty, with a badge saying what is waiting</div></div>
-      <div class="card tight"><div class="kpi acc">3</div><div class="lbl">Signal returns → push over Supabase RPCs</div></div>
-      <div class="card tight"><div class="kpi acc">4</div><div class="lbl">Pull merges what other phones did meanwhile</div></div>
+      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>In the shop</h3></div>
+        <p class="sub" style="margin:0">A notebook and a phone calculator. The customer changes their mind — the whole column is added up again.</p></div>
+      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>In the group chat</h3></div>
+        <p class="sub" style="margin:0">The order typed again into Messenger, standing in the street, numbered by hand.</p></div>
+      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>At the warehouse</h3></div>
+        <p class="sub" style="margin:0">Read off the chat and typed a third time to be packed. Three chances for a number to change.</p></div>
+      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>At the office</h3></div>
+        <p class="sub" style="margin:0">A spreadsheet of customers, one of products and prices, and the month's sales added up at the end of the month.</p></div>
     </div>
-    <div class="grid g3" style="margin-top:14px">
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/padlock.png" alt=""><h3>What is stored where</h3></div>
-        <ul class="clean">
-          <li><b>localStorage</b> — orders, shops, prices, settings</li>
-          <li><b>IndexedDB</b> — photographs and map tiles, because they would blow the 5 MB quota in a week</li>
-          <li><b>Supabase Storage</b> — shop pictures that need to reach other phones</li>
-        </ul></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/stopwatch.png" alt=""><h3>What works with no signal</h3></div>
-        <ul class="clean">
-          <li>The whole catalogue, with photographs</li>
-          <li>Taking, editing and copying an order</li>
-          <li>The map, from cached tiles</li>
-          <li>Nearest shops, from GPS alone</li>
-        </ul></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/warning.png" alt=""><h3>The honest counter</h3></div>
-        <p class="sub" style="margin:0">"Waiting to send" counts what is <b>genuinely unsent from this phone</b> — not the queue length. A shop pulled down from the office was being re-queued to push straight back, and the badge read "40 waiting" on a phone with nothing of its own to send.</p></div>
+    <div class="note" style="margin-top:18px">
+      <b>The rule I build by:</b> anything that makes a person redo work by hand is worth removing. Every screen in this deck exists because it removes one of those steps.
     </div>
   </div>
+  <div class="speaker"><b>Speaker</b>Don't oversell. There was no system to replace — there was a notebook, a calculator, a chat and some spreadsheets.</div>
 </section>
 
-<!-- ═══════════ 10 · MERGE ═══════════ -->
-<section class="slide" data-title="Merge, not overwrite">
+<!-- ═══════════ 03 · AFTER ═══════════ -->
+<section class="slide" data-title="After">
   <div class="wrap">
-    <span class="eyebrow">Two phones, one row</span>
-    <h2>Per-row merge, not last-write-wins</h2>
-    <p class="sub">Four people, four phones, everyone offline at different times. Last-write-wins silently destroys a colleague's work, and nobody finds out until a delivery goes to the wrong address.</p>
-    <div class="grid g3">
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/multi-star.png" alt=""><h3>Field-level rules</h3></div>
-        <p class="sub" style="margin:0">A merge decides per field, not per row. The office wins on names, pins and shop details; the phone wins on what it typed. Payments are merged server-side, so two phones recording against one order cannot lose one.</p></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/encrypted.png" alt=""><h3>Tombstones</h3></div>
-        <p class="sub" style="margin:0">A deleted order, shop or product leaves a marker so the deletion actually propagates. A tombstone for something a phone has never seen is still remembered — otherwise the row arrives later and comes back from the dead.</p></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/defence.png" alt=""><h3>A versioned repair</h3></div>
-        <p class="sub" style="margin:0">The merge rules carry a <span class="mono">REPAIR_ID</span>. Change them in a way that could have dropped data and the id is bumped, so a phone that already lost rows re-asks the office <b>once</b> — instead of never asking again.</p></div>
-    </div>
-    <div class="note" style="margin-top:16px">
-      <b>Why it is written down:</b> these people know each other socially. Deleting a friend's real work is worse than a bug.
+    <span class="eyebrow">After</span>
+    <h2>Every spreadsheet became <span class="grad">a screen that does the work</span></h2>
+    <p class="sub">A spreadsheet holds a list. An app holds the work: it knows who is allowed to change what, what happens next, and it adds itself up.</p>
+    <div class="ba">
+      <div class="head">What they kept by hand</div><div></div><div class="head h2">What the app does instead</div>
+      <div class="was"><b>Customers spreadsheet</b> — names, numbers, addresses</div><div class="arr">→</div>
+      <div class="now"><b>Store book</b> — saved from the order itself, with what each shop bought last time</div>
+      <div class="was"><b>Products spreadsheet</b> — prices that go out of date</div><div class="arr">→</div>
+      <div class="now"><b>Catalogue with pictures</b> — one price list, changed once in the office, on every phone</div>
+      <div class="was"><b>Notebook + calculator</b></div><div class="arr">→</div>
+      <div class="now"><b>Order form</b> — tap the product, the total is always right</div>
+      <div class="was"><b>Messenger + retyping</b></div><div class="arr">→</div>
+      <div class="now"><b>Send to office</b> — the warehouse gets the exact order; a copy is still ready to paste in the chat</div>
+      <div class="was"><b>"Is my order coming?"</b> phone calls</div><div class="arr">→</div>
+      <div class="now"><b>Full status</b> — sent, confirmed, packed, delivered, with who and when</div>
+      <div class="was"><b>Month-end sales tally</b></div><div class="arr">→</div>
+      <div class="now"><b>Dashboard and quotas</b> — every agent's day, week and month, live</div>
     </div>
   </div>
-  <div class="speaker"><b>Speaker</b>If a recruiter asks one technical question about this project, it will be this slide. Be ready to talk through a concrete conflict.</div>
 </section>
 
-<!-- ═══════════ 11 · ROLES AND ACCESS ═══════════ -->
-<section class="slide" data-title="Roles and access">
-  <div class="wrap appsplit">
+<!-- ═══════════ 04 · LOGIN & ROLES ═══════════ -->
+<section class="slide" data-title="Login and roles" data-short>
+  <div class="wrap appsplit two">
     <div>
-      <span class="eyebrow">Access</span>
-      <h2>Enforced in the database, not the screen</h2>
-      <p class="sub" style="max-width:60ch">Every staff phone holds a copy of the company's orders and shops. Hiding a card is not security, so the rules live in Postgres.</p>
-      <div class="grid g2" style="margin-top:12px">
-        <div class="card"><div class="cardhead"><img class="icn mono" src="assets/padlock.png" alt=""><h3>How</h3></div>
+      <span class="eyebrow">Accounts</span>
+      <h2>Everyone logs in, and sees <span class="grad">only their job</span></h2>
+      <p class="sub">One app, five kinds of screen. The office decides who is what.</p>
+      <div class="grid g2">
+        <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/padlock.png" alt=""><h3>Accounts</h3></div>
           <ul class="clean">
-            <li>Row-level security on <b>all eight tables</b></li>
-            <li>Every write goes through a <span class="mono">security definer</span> function — 29 of them; no table is writable directly</li>
-            <li>An optional 4-digit PIN on the Admin door</li>
-            <li>An on/off switch per person, so a lost phone stops reaching the shared list</li>
+            <li>Email and password, per person</li>
+            <li>A new sign-up starts with <b>nothing</b> — the office gives the role</li>
+            <li>Switch someone off and their phone stops getting the list</li>
           </ul></div>
-        <div class="card"><div class="cardhead"><img class="icn mono" src="assets/info.png" alt=""><h3>Who sees what</h3></div>
+        <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/crown.png" alt=""><h3>Five roles</h3></div>
           <ul class="clean">
-            <li><b>Agent</b> — their own orders and their own book of shops</li>
-            <li><b>Store owner</b> — their own orders, nothing else</li>
-            <li><b>Warehouse</b> — prices, pictures, groups. No Admin.</li>
-            <li><b>Admin</b> — everything, including roles</li>
+            <li><b>Field agent</b> — takes orders, sees only their own shops</li>
+            <li><b>Admin / secretary</b> — confirms, sees everyone</li>
+            <li><b>Warehouse</b> — products, prices, pictures</li>
+            <li><b>Delivery</b> — packs and delivers</li>
+            <li><b>Store owner</b> — orders directly</li>
           </ul></div>
       </div>
+      <div class="note">The rules are enforced by the <b>database</b>, not just by hiding buttons. An agent's phone is never sent another agent's customers.</div>
     </div>
-    <div class="shot">
-      <div class="frame todo" data-shot="settings.png">assets/screens/<br>settings.png</div>
-      <div class="cap"><b>Settings</b>The shared list, the account, the PIN</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 12 · THE CATALOGUE ═══════════ -->
-<section class="slide" data-title="The catalogue">
-  <div class="wrap">
-    <span class="eyebrow">Products</span>
-    <h2>Two hundred products, and the price you agreed</h2>
-    <div class="grid g3">
-      <div class="card tight"><div class="kpi acc">200+</div><div class="lbl">Products in the live catalogue</div></div>
-      <div class="card tight"><div class="kpi acc">76</div><div class="lbl">With photographs, inside the APK</div></div>
-      <div class="card tight"><div class="kpi acc">4</div><div class="lbl">Ways to sell one product: piece · pack · box · case</div></div>
-    </div>
-    <div class="grid g2" style="margin-top:14px">
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/fire.png" alt=""><h3>The price is frozen onto the line</h3></div>
-        <p class="sub" style="margin:0">The unit and the price travel with the order line, not with the product. The office can rewrite the price list next month and it cannot rewrite what a shopkeeper agreed to today. That is one line of thought and about forty of code, and it is the difference between a catalogue and a record.</p></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/layer-up.png" alt=""><h3>Keeping it true</h3></div>
-        <ul class="clean">
-          <li>Prices published from the office and pulled by every phone</li>
-          <li>Groups and folders, hidden products, delete and bring back</li>
-          <li>A hidden or deleted product already on an unsent order stays, and is marked</li>
-          <li>Removals travel to other phones as tombstones</li>
-        </ul></div>
+    <div class="shots">
+      <div class="shot">
+        <div class="frame todo" data-shot="login.png">login.png</div>
+        <div class="cap"><b>Log in</b>Once online, then it works offline</div>
+      </div>
+      <div class="shot">
+        <div class="frame todo" data-shot="home.png">home.png</div>
+        <div class="cap"><b>The roles</b>Each opens a different screen</div>
+      </div>
     </div>
   </div>
+  <div class="speaker"><b>Speaker</b>Bosses ask "can an agent see the other agents' customers?" — the answer is no, and it is the database that says no.</div>
 </section>
 
-<!-- ═══════════ 13 · SHOPS ═══════════ -->
-<section class="slide" data-title="Shops and visits">
-  <div class="wrap appsplit">
-    <div>
-      <span class="eyebrow">The round</span>
-      <h2>Who has gone quiet</h2>
-      <p class="sub" style="max-width:60ch">Every shop carries its owner, contact, address, landmark, GPS pin, photograph, order history and running balance. Added on one phone, visible on all of them.</p>
-      <ul class="clean" style="margin-top:6px">
-        <li><b>Due for a visit</b> — a shop nobody has ordered from, or marked visited, in N days. The threshold is the agent's to set.</li>
-        <li>A blue strip for the agent, a count for the office. The reminder belongs to whoever does the walking.</li>
-        <li><b>I already visited</b> closes the loop without needing an order — a visit that sold nothing is still a visit.</li>
-        <li>Sort A–Z or by <b>Nearest</b>, which works from GPS alone with no signal at all.</li>
-      </ul>
-    </div>
-    <div class="shot">
-      <div class="frame todo" data-shot="stores.png">assets/screens/<br>stores.png</div>
-      <div class="cap"><b>Stores</b>The round, and who is overdue</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 14 · THE MAP ═══════════ -->
-<section class="slide" data-title="The map">
-  <div class="wrap appsplit">
-    <div>
-      <span class="eyebrow">Offline</span>
-      <h2>A map that still draws with no signal</h2>
-      <p class="sub" style="max-width:60ch">MapLibre GL over OpenFreeMap tiles, with the tiles cached into IndexedDB as they are fetched. Once an area has been seen, it keeps working in the dead zones.</p>
-      <ul class="clean" style="margin-top:6px">
-        <li>Pin a shop from the Stores tab or while taking the order; correct the pin later.</li>
-        <li>Overdue shops carry a different pin, so the round can be planned by looking.</li>
-        <li>No map link ever goes into the copied order — in Messenger it unfurls into a card that buries the order.</li>
-        <li>Nearest-shops is computed from raw GPS, so it answers even when nothing will load.</li>
-      </ul>
-    </div>
-    <div class="shot">
-      <div class="frame todo" data-shot="map.png">assets/screens/<br>map.png</div>
-      <div class="cap"><b>Stores map</b>Cached tiles, pinned shops</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 15 · THE DAY ═══════════ -->
-<section class="slide" data-title="The day">
-  <div class="wrap appsplit">
-    <div>
-      <span class="eyebrow">My profile</span>
-      <h2>What the day came to</h2>
-      <p class="sub" style="max-width:60ch">The count, the money, the month against the target. This is the screen an agent actually checks — and the one that decided several features would never be built.</p>
-      <ul class="clean" style="margin-top:6px">
-        <li><b>Only orders that were sent count</b>, and the screen says so. A copied-but-unsent order was the visit, but it was not a sale.</li>
-        <li>The monthly target is set by the office in Admin → Team, and shown as progress, not as a scolding.</li>
-        <li>A one-line strip of the same figures sits halfway down the order form, so the day is visible without leaving the shop.</li>
-      </ul>
-    </div>
-    <div class="shot">
-      <div class="frame todo" data-shot="profile.png">assets/screens/<br>profile.png</div>
-      <div class="cap"><b>My profile</b>Today, this month, the target</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 16 · THE OFFICE ═══════════ -->
-<section class="slide" data-title="The office">
+<!-- ═══════════ 05 · PRODUCTS ═══════════ -->
+<section class="slide" data-title="Products" data-short>
   <div class="wrap appsplit wide">
     <div>
-      <span class="eyebrow">The other end, on a desktop</span>
-      <h2>The office, the warehouse and the van</h2>
-      <p class="sub" style="max-width:58ch">The same build, opened in a browser instead of wrapped in an APK. The office IS the warehouse here — Mark as Packed and Mark as Delivered sit on this screen as well as on the delivery phone, through one shared code path.</p>
-      <div class="card" style="margin-top:12px"><div class="cardhead"><img class="icn mono" src="assets/gear.png" alt=""><h3>The list</h3></div>
-        <p class="sub" style="margin:0">Search, date window, sort and whose-orders — applied <b>before</b> the four figures at the top, so they always describe what is on screen. Status ladder Sent → Confirmed → Packed → Delivered.</p></div>
-      <div class="card" style="margin-top:10px"><div class="cardhead"><img class="icn mono" src="assets/defence.png" alt=""><h3>Undo is not cancel</h3></div>
-        <p class="sub" style="margin:0">Taking a status back reads the step to return to out of the recorded stamps — not a fixed ladder — and writes itself into the timeline. Nothing rolls back silently.</p></div>
-      <div class="card" style="margin-top:10px"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>What changed, not who</h3></div>
-        <p class="sub" style="margin:0">Editing an order records <b>what</b> changed. "Somebody edited this" is the least useful half of the answer when the office is about to ring the number on it.</p></div>
+      <span class="eyebrow">Product system</span>
+      <h2>Products, <span class="grad">with the picture</span></h2>
+      <p class="sub" style="margin-bottom:12px">Agents sell by showing the pack. The catalogue is pictures first.</p>
+      <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/layer-up.png" alt=""><h3>Change it once</h3></div>
+        <p class="sub" style="margin:0">Price, name, picture or pack size is changed in the office and reaches every phone. Orders already sent keep the price they were agreed at.</p></div>
+      <div class="card tight" style="margin-top:10px"><div class="cardhead"><img class="icn mono" src="assets/defence.png" alt=""><h3>Hide, don't delete</h3></div>
+        <p class="sub" style="margin:0">Out of stock this week? One tap takes it off every agent's list, and one tap brings it back.</p></div>
+      <div class="card tight" style="margin-top:10px"><div class="cardhead"><img class="icn mono" src="assets/moon.png" alt=""><h3>Pictures with no signal</h3></div>
+        <p class="sub" style="margin:0">Photos are saved on the phone, so the catalogue still shows in a shop with no signal.</p></div>
     </div>
-    <div class="shot wide">
-      <div class="frame todo" data-shot="admin-orders.png">assets/screens/<br>admin-orders.png</div>
-      <div class="cap"><b>Admin → Orders</b>The office screen, on a desktop</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 17 · SHIPPING ═══════════ -->
-<section class="slide" data-title="Shipping it">
-  <div class="wrap">
-    <span class="eyebrow">From source to a phone in a shop</span>
-    <h2>Shipping it</h2>
-    <div class="grid g4">
-      <div class="card tight"><div class="kpi acc">1</div><div class="lbl"><span class="mono">build.py</span> inlines styles, logic and photographs into one HTML file</div></div>
-      <div class="card tight"><div class="kpi acc">2</div><div class="lbl"><span class="mono">build_apk.py</span> compiles, dexes, aligns and signs the APK</div></div>
-      <div class="card tight"><div class="kpi acc">3</div><div class="lbl"><span class="mono">release.py</span> writes <span class="mono">update.json</span> with the version, size and SHA-256</div></div>
-      <div class="card tight"><div class="kpi acc">4</div><div class="lbl">Published to GitHub Releases — the address every phone checks</div></div>
-    </div>
-    <div class="grid g2" style="margin-top:14px">
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/badge.png" alt=""><h3>How a phone updates itself</h3></div>
-        <p class="sub" style="margin:0">The app reads <span class="mono">update.json</span> from <span class="mono">/releases/latest/download/</span>, compares the version code against its own and offers the download. That URL is baked into the APK once and never changes, because GitHub keeps <span class="mono">latest</span> pointing at the newest release forever.</p></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/warning.png" alt=""><h3>The rule that had to be learned</h3></div>
-        <p class="sub" style="margin:0"><span class="mono">update.json</span> carries one release's notes. A phone that skipped the version before this one is told nothing about it — so when the previous release may not be installed yet, its notes are merged in before uploading. Missed three times before it was written down.</p></div>
+    <div class="shot wide desk">
+      <div class="frame todo" data-shot="admin-products.png">admin-products.png</div>
+      <div class="cap"><b>Products Management</b>On the office PC — every card has its group, price and pack</div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ 18 · NOT BUILT ═══════════ -->
-<section class="slide" data-title="What I did not build">
+<!-- ═══════════ 06 · GROUPS ═══════════ -->
+<section class="slide" data-title="Groups" data-short>
   <div class="wrap">
-    <span class="eyebrow">The slide I am proudest of</span>
-    <h2>What I chose <span class="grad">not</span> to build</h2>
-    <p class="sub">Every one of these was asked for, or was obviously next. Each was measured against the real data first, and each would have drawn an empty screen.</p>
+    <span class="eyebrow">Group system</span>
+    <h2>200 products, found in <span class="grad">two taps</span></h2>
+    <p class="sub">Scrolling 200 pictures in front of a customer is slow. The office sorts products into groups with a colour; the agent opens the group the customer asked about.</p>
+    <div class="pair three">
+      <div class="shot">
+        <div class="frame todo" data-shot="grouped.png">grouped.png</div>
+        <div class="cap"><b>The agent's phone</b>Groups, with the best seller on the cover</div>
+      </div>
+      <div class="shot wide desk zoom" style="--ar:1380/561">
+        <div class="frame todo" data-shot="admin-groups-zoom.png">admin-groups-zoom.png</div>
+        <div class="cap"><b>The office</b>Make, rename, colour and re-order groups — every phone follows</div>
+      </div>
+      <div class="side">
+        <div class="card tight"><h3 style="font-size:14px;margin:0 0 4px">One product, two groups</h3><p class="sub" style="margin:0;font-size:12.8px">A jar of sweets can sit in Sweets and in Jar candy.</p></div>
+        <div class="card tight"><h3 style="font-size:14px;margin:0 0 4px">Groups itself</h3><p class="sub" style="margin:0;font-size:12.8px">A new product is placed beside the products named like it.</p></div>
+        <div class="card tight"><h3 style="font-size:14px;margin:0 0 4px">Shows what's unsure</h3><p class="sub" style="margin:0;font-size:12.8px">A guess is marked with "?" until someone confirms it.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 07 · NOTHING FORGOTTEN ═══════════ -->
+<section class="slide" data-title="Nothing forgotten">
+  <div class="wrap">
+    <span class="eyebrow">Adding a product</span>
+    <h2>It tells you <span class="grad">what you forgot</span></h2>
+    <p class="sub">A product added without a price or a picture is a product an agent cannot sell. So the app checks before it saves, and keeps a list of anything still unfinished.</p>
+    <div class="pair">
+      <div class="shot">
+        <div class="frame todo" data-shot="add-forgot.png">add-forgot.png</div>
+        <div class="cap"><b>Add product</b>The empty boxes shake and light up; the group is already picked from the name</div>
+      </div>
+      <div class="shot wide desk zoom" style="--ar:1380/538">
+        <div class="frame todo" data-shot="admin-missing-zoom.png">admin-missing-zoom.png</div>
+        <div class="cap"><b>Missing something</b>Every product with no photo, price, pack or group — one tab, gone when there is nothing left</div>
+      </div>
+    </div>
+  </div>
+  <div class="speaker"><b>Speaker</b>This came from a real mistake: a product added in a hurry with no group ended up in a folder of its own. The fix was not a warning in a manual — it was the app catching it.</div>
+</section>
+
+<!-- ═══════════ 08 · TAKING AN ORDER ═══════════ -->
+<section class="slide" data-title="Taking an order">
+  <div class="wrap">
+    <span class="eyebrow">The job itself</span>
+    <h2>An order, <span class="grad">start to finish</span>, in the shop</h2>
+    <p class="sub">The agent hands the phone across the counter. The customer sees the pictures and the total, not a notebook.</p>
+    <div class="shots">
+      <div class="shot">
+        <div class="frame todo" data-shot="order-form.png">order-form.png</div>
+        <div class="cap"><b>1 · Pick</b>What this shop bought last time comes first</div>
+      </div>
+      <div class="shot">
+        <div class="frame todo" data-shot="cart.png">cart.png</div>
+        <div class="cap"><b>2 · Check</b>The basket, changed as many times as they like</div>
+      </div>
+      <div class="shot">
+        <div class="frame todo" data-shot="summary.png">summary.png</div>
+        <div class="cap"><b>3 · Send</b>To the office, and a copy ready for the group chat</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 09 · FULL STATUS ═══════════ -->
+<section class="slide" data-title="Full status" data-short>
+  <div class="wrap appsplit two">
+    <div>
+      <span class="eyebrow">Full status system</span>
+      <h2>Every order has <span class="grad">a trail</span></h2>
+      <p class="sub">Sent → Confirmed → On the way → Delivered, and underneath it every step with <b>who</b> did it and <b>when</b>.</p>
+      <div class="tl">
+        <div class="step"><h3>The agent</h3><p>Sees their order move without calling the office.</p></div>
+        <div class="step"><h3>The office</h3><p>Confirms, assigns a driver, marks packed — and can take a step back. Taking it back is written down too.</p></div>
+        <div class="step"><h3>The warehouse and driver</h3><p>Packed, delivered, paid — each one a stamp with a name on it.</p></div>
+        <div class="step"><h3>The boss</h3><p>"Where is this order and who touched it?" has an answer on one screen.</p></div>
+      </div>
+    </div>
+    <div class="shots">
+      <div class="shot">
+        <div class="frame todo" data-shot="profile-today.png">profile-today.png</div>
+        <div class="cap"><b>The agent's view</b>A bar per order</div>
+      </div>
+      <div class="shot">
+        <div class="frame todo" data-shot="status-timeline.png">status-timeline.png</div>
+        <div class="cap"><b>Full status</b>Who did what, and when</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 10 · DASHBOARD ═══════════ -->
+<section class="slide" data-title="Dashboard" data-short>
+  <div class="wrap appsplit wide">
+    <div>
+      <span class="eyebrow">Dashboard</span>
+      <h2>The office, <span class="grad">at a glance</span></h2>
+      <p class="sub" style="margin-bottom:12px">Opened on a PC. The four numbers at the top are the ones the office asks every morning.</p>
+      <div class="grid g2">
+        <div class="card tight"><div class="kpi acc" style="font-size:26px">New</div><div class="lbl">Orders nobody has opened yet</div></div>
+        <div class="card tight"><div class="kpi acc" style="font-size:26px">₱</div><div class="lbl">Value waiting to be confirmed</div></div>
+        <div class="card tight"><div class="kpi acc" style="font-size:26px">Pack</div><div class="lbl">Confirmed, still to pack</div></div>
+        <div class="card tight"><div class="kpi acc" style="font-size:26px">Owed</div><div class="lbl">Delivered but unpaid</div></div>
+      </div>
+      <div class="note">Filter by agent, date or status and the numbers follow the filter — they always describe what is on screen.</div>
+    </div>
+    <div class="shot wide desk">
+      <div class="frame todo" data-shot="admin-orders.png">admin-orders.png</div>
+      <div class="cap"><b>Admin → Orders</b>New, confirmed, packed, delivered, unpaid — one click each</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 11 · AGENTS: DAILY SALES & QUOTA ═══════════ -->
+<section class="slide" data-title="Daily sales and quota" data-short>
+  <div class="wrap appsplit two">
+    <div>
+      <span class="eyebrow">Daily earnings &amp; quota</span>
+      <h2>Each agent's day, week and <span class="grad">target</span></h2>
+      <p class="sub">No month-end tally. The numbers add themselves up from the orders as they are sent.</p>
+      <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/stopwatch.png" alt=""><h3>Day by day</h3></div>
+        <p class="sub" style="margin:0">Monday to Saturday: orders, shops and pesos for each day. Tap back to see last week.</p></div>
+      <div class="card tight" style="margin-top:10px"><div class="cardhead"><img class="icn mono" src="assets/fire.png" alt=""><h3>Monthly quota</h3></div>
+        <p class="sub" style="margin:0">The office sets a target per agent. The agent sees a bar that fills, and how much is left to go.</p></div>
+      <div class="card tight" style="margin-top:10px"><div class="cardhead"><img class="icn mono" src="assets/badge.png" alt=""><h3>The boss sees everyone</h3></div>
+        <p class="sub" style="margin:0">The same board for any agent, from Admin → Team. Only orders actually sent are counted.</p></div>
+    </div>
+    <div class="shots">
+      <div class="shot">
+        <div class="frame todo" data-shot="profile.png">profile.png</div>
+        <div class="cap"><b>The agent</b>My month, my week</div>
+      </div>
+      <div class="shot">
+        <div class="frame todo" data-shot="agent-week.png">agent-week.png</div>
+        <div class="cap"><b>The boss</b>Any agent, and their target</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 12 · SYNC ═══════════ -->
+<section class="slide" data-title="Sync" data-short>
+  <div class="wrap">
+    <span class="eyebrow">The biggest part</span>
+    <h2>Phone and PC, <span class="grad">always the same</span> — even with no signal</h2>
+    <p class="sub">Half the shops have no signal, so the phone saves first and syncs when it can.</p>
+    <div class="syncrow">
+      <div class="shot">
+        <div class="frame todo" data-shot="summary.png">summary.png</div>
+        <div class="cap"><b>Agent's phone</b>In the shop, no signal needed</div>
+      </div>
+      <div class="flow v">
+        <div class="node hot"><div class="k">0 bars · in the shop</div><h3>Saved on the phone</h3><p>The order exists the moment it is sent. A badge says what is waiting.</p></div>
+        <div class="to">↓</div>
+        <div class="node"><div class="k">Back in signal</div><h3>Syncs by itself</h3><p>What waited goes up; what other phones did comes down.</p></div>
+        <div class="to">⇅</div>
+        <div class="node hot"><div class="k">One shared database</div><h3>Checked, then stored</h3><p>Who is allowed is checked on the server. No row is lost.</p></div>
+      </div>
+      <div class="shot wide desk">
+        <div class="frame todo" data-shot="admin-orders.png">admin-orders.png</div>
+        <div class="cap"><b>Office PC</b>Same app in a browser — the order is there as it arrives</div>
+      </div>
+    </div>
+    <div class="grid g3 syncnotes" style="margin-top:14px">
+      <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Office → every phone</h3></div>
+        <p class="sub" style="margin:0">A new price, a hidden product, a new group — on every agent's phone at the next sync.</p></div>
+      <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/defence.png" alt=""><h3>Two people, one order</h3></div>
+        <p class="sub" style="margin:0">Changes are merged row by row, not "last one wins". Two phones editing at once do not wipe each other out.</p></div>
+      <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>Phone or PC, same account</h3></div>
+        <p class="sub" style="margin:0">An Android app for the field, a browser tab for the office. One build, one list, one truth.</p></div>
+    </div>
+  </div>
+  <div class="speaker"><b>Speaker</b>This is the part that separates an app from a shared spreadsheet. A shared sheet needs signal and lets the last person to save overwrite everyone else.</div>
+</section>
+
+<!-- ═══════════ 13 · NEXT: RECEIPT → STOCK ═══════════ -->
+<section class="slide" data-title="Next: receipt to stock">
+  <div class="wrap">
+    <span class="eyebrow">Next step · not built yet</span>
+    <h2>Print the receipt, <span class="grad">the stock takes care of itself</span></h2>
+    <p class="sub">The warehouse packs like a cashier: pick the customer's products into a box, list them, print a receipt. If the office already has a stock or cashier system, I would connect to it, not replace it.</p>
+    <div class="flow">
+      <div class="node"><div class="k">Warehouse</div><h3>Pack the box</h3><p>Products listed as they go in.</p></div>
+      <div class="to">→</div>
+      <div class="node hot"><div class="k">Receipt printed</div><h3>Stock goes down</h3><p>Every line on the receipt comes off the count.</p></div>
+      <div class="to">→</div>
+      <div class="node"><div class="k">Stock reaches 0</div><h3>Hides itself</h3><p>Off every agent's list, so nobody offers what cannot be sent.</p></div>
+      <div class="to">→</div>
+      <div class="node"><div class="k">Restocked</div><h3>Comes back</h3><p>Back on the list for everyone.</p></div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Already in the app</h3></div>
+        <p class="sub" style="margin:0">A stock count the office owns, and hiding a product from every phone. This joins the two.</p></div>
+      <div class="card tight"><div class="cardhead"><img class="icn mono" src="assets/warning.png" alt=""><h3>The honest gap</h3></div>
+        <p class="sub" style="margin:0">An agent with no signal still sees the last list they downloaded. The fix is to show how old that list is, not pretend it is live.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 14 · ANY BUSINESS ═══════════ -->
+<section class="slide" data-title="Any business" data-short>
+  <div class="wrap">
+    <span class="eyebrow">Beyond this one company</span>
+    <h2>Every business keeps <span class="grad">the same five lists</span></h2>
+    <p class="sub">Different trade, same shape. Once I know where a business keeps these five, I know where the retyping is — and that is where an app pays for itself.</p>
+    <div class="four">
+      <div class="card"><div class="big">👥</div><h3>Customers</h3><p>Who buys, where they are, what they bought last</p></div>
+      <div class="card"><div class="big">📦</div><h3>Products</h3><p>Or services — with a price and a picture</p></div>
+      <div class="card"><div class="big">🧾</div><h3>Orders</h3><p>Or jobs, bookings, tickets</p></div>
+      <div class="card"><div class="big">🧑‍💼</div><h3>People</h3><p>Who took it, who did it, their target</p></div>
+      <div class="card"><div class="big">🚦</div><h3>Status</h3><p>Where each one is right now</p></div>
+    </div>
+    <div class="note" style="margin-top:18px"><b>How I start with any business:</b> follow one order from the first message to the money, and count every time something is written down twice. The next eight slides are that walk for eight kinds of business.</div>
+  </div>
+  <div class="speaker"><b>Speaker</b>This is the pitch to an employer who does not need an order app: I can walk their workflow and find where the work is done twice.</div>
+</section>
+
+<!-- ═══════════ 15 · SCENARIO: DISTRIBUTOR ═══════════ -->
+<section class="slide" data-title="If you're a distributor">
+  <div class="wrap">
+    <span class="eyebrow">Scenario 1 of 8</span>
+    <h2>If your business is <span class="grad">a distributor or wholesaler</span></h2>
+    <p class="sub">Agents on the road, a warehouse, an office, and orders arriving by chat.</p>
+    <div class="flow steps"><div class="node"><div class="k">Step 1</div><h3>Shop visit</h3><p>Agent opens the store</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 2</div><h3>Order on the phone</h3><p>Total in front of the owner</p></div><div class="to">→</div><div class="node"><div class="k">Step 3</div><h3>Office confirms</h3><p>One click, on the PC</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 4</div><h3>Packed</h3><p>Warehouse stamps it</p></div><div class="to">→</div><div class="node"><div class="k">Step 5</div><h3>Delivered + paid</h3><p>Driver closes it</p></div></div>
+    <div class="scen">
+      <div class="card pain"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Today</h3></div>
+        <ul class="clean"><li>Orders in Messenger, retyped for the warehouse</li><li>Agents quoting old prices</li><li>Sales per agent counted at month end</li><li>"Is my order coming?" calls</li></ul></div>
+      <div class="card build"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>What I'd build</h3></div>
+        <ul class="clean"><li>Exactly SukiRun: order form, catalogue, groups</li><li>Office dashboard and full status</li><li>Quota per agent, day by day</li><li>Works with no signal</li></ul></div>
+      <div class="card reuse"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Already proven</h3></div>
+        <ul class="clean"><li>56 releases, in use by field agents</li><li>200+ products with pictures</li><li>Android app + PC browser, one build</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 16 · SCENARIO: RETAIL ═══════════ -->
+<section class="slide" data-title="If you're a shop">
+  <div class="wrap">
+    <span class="eyebrow">Scenario 2 of 8</span>
+    <h2>If your business is <span class="grad">a store</span> — sari-sari, hardware, pharmacy</h2>
+    <p class="sub">One counter, a stockroom, customers on credit, and an owner who is not always there.</p>
+    <div class="flow steps"><div class="node"><div class="k">Step 1</div><h3>Customer picks</h3><p>At the counter</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 2</div><h3>Tap to sell</h3><p>Total and change</p></div><div class="to">→</div><div class="node"><div class="k">Step 3</div><h3>Stock −1</h3><p>By itself</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 4</div><h3>On credit?</h3><p>Into their page of the book</p></div><div class="to">→</div><div class="node"><div class="k">Step 5</div><h3>Owner sees it</h3><p>Today’s sales, from home</p></div></div>
+    <div class="scen">
+      <div class="card pain"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Today</h3></div>
+        <ul class="clean"><li>A notebook of who owes what (utang)</li><li>Stock checked by looking at the shelf</li><li>Prices in the cashier's head</li><li>The owner can't see today's sales from home</li></ul></div>
+      <div class="card build"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>What I'd build</h3></div>
+        <ul class="clean"><li>A counter screen: tap to sell, total and change</li><li>Stock that goes down with every sale, and a low-stock list</li><li>A credit book per customer, with what they took</li><li>Today's sales on the owner's phone</li></ul></div>
+      <div class="card reuse"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Carried over from Suki</h3></div>
+        <ul class="clean"><li>Product catalogue with pictures and groups</li><li>Stock the office owns</li><li>Cashier vs owner roles</li><li>Day-by-day board, offline sync</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 17 · SCENARIO: FOOD ═══════════ -->
+<section class="slide" data-title="If you sell food">
+  <div class="wrap">
+    <span class="eyebrow">Scenario 3 of 8</span>
+    <h2>If your business is <span class="grad">food</span> — a restaurant, bakery or home kitchen</h2>
+    <p class="sub">Orders from a Facebook page and Messenger, a kitchen, and riders.</p>
+    <div class="flow steps"><div class="node"><div class="k">Step 1</div><h3>Message arrives</h3><p>Page or Messenger</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 2</div><h3>New</h3><p>One list, nothing scrolled past</p></div><div class="to">→</div><div class="node"><div class="k">Step 3</div><h3>Cooking</h3><p>Kitchen tablet</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 4</div><h3>Ready</h3><p>Customer told</p></div><div class="to">→</div><div class="node"><div class="k">Step 5</div><h3>Picked up + paid</h3><p>Day’s sales add up</p></div></div>
+    <div class="scen">
+      <div class="card pain"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Today</h3></div>
+        <ul class="clean"><li>Orders scattered across chats and screenshots</li><li>The kitchen works from a photo of a message</li><li>Pickup times forgotten, an order missed</li><li>Who has paid? Scroll up and check</li></ul></div>
+      <div class="card build"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>What I'd build</h3></div>
+        <ul class="clean"><li>Every order in one list: New → Cooking → Ready → Picked up</li><li>A kitchen screen on a tablet</li><li>A reply to paste back to the customer</li><li>Today's sales and best sellers</li></ul></div>
+      <div class="card reuse"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Carried over from Suki</h3></div>
+        <ul class="clean"><li>The order form and the copied summary</li><li>Full status with who and when</li><li>Menu as a catalogue with groups</li><li>Cashier, kitchen and rider roles</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 18 · SCENARIO: SERVICES ═══════════ -->
+<section class="slide" data-title="If you sell a service">
+  <div class="wrap">
+    <span class="eyebrow">Scenario 4 of 8</span>
+    <h2>If your business is <span class="grad">a service</span> — repair, laundry, aircon cleaning, salon</h2>
+    <p class="sub">Jobs instead of products, technicians instead of agents.</p>
+    <div class="flow steps"><div class="node"><div class="k">Step 1</div><h3>Item comes in</h3><p>Photo taken</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 2</div><h3>Ticket</h3><p>Who, what, when</p></div><div class="to">→</div><div class="node"><div class="k">Step 3</div><h3>Working</h3><p>Assigned technician</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 4</div><h3>Ready</h3><p>Message the customer</p></div><div class="to">→</div><div class="node"><div class="k">Step 5</div><h3>Released + paid</h3><p>Counted for the tech</p></div></div>
+    <div class="scen">
+      <div class="card pain"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Today</h3></div>
+        <ul class="clean"><li>Job slips on paper, lost or unreadable</li><li>Customers calling "is it done yet?"</li><li>Nobody knows which technician did how much</li><li>Parts used are never counted</li></ul></div>
+      <div class="card build"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>What I'd build</h3></div>
+        <ul class="clean"><li>A job ticket with a photo of the item as it came in</li><li>Received → Working → Ready → Released, with a message to send the customer</li><li>Each technician's jobs per day and a monthly target</li><li>Parts taken off stock as they are used</li></ul></div>
+      <div class="card reuse"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Carried over from Suki</h3></div>
+        <ul class="clean"><li>The status ladder and its timeline</li><li>Per-person week board and quota</li><li>Photos that work offline</li><li>Accounts and roles</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SCENARIO 5 ═══════════ -->
+<section class="slide" data-title="If you deliver water or LPG">
+  <div class="wrap">
+    <span class="eyebrow">Scenario 5 of 8</span>
+    <h2>If your business is <span class="grad">delivery</span> — water refilling, LPG, rice</h2>
+    <p class="sub">Regular customers, riders on motorbikes, and containers that have to come back.</p>
+    <div class="flow steps"><div class="node"><div class="k">Step 1</div><h3>Customer texts</h3><p>Or calls, or walks in</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 2</div><h3>Order in the list</h3><p>Their usual, one tap</p></div><div class="to">→</div><div class="node"><div class="k">Step 3</div><h3>Rider’s run</h3><p>In order, on his phone</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 4</div><h3>Delivered</h3><p>Empties collected</p></div><div class="to">→</div><div class="node"><div class="k">Step 5</div><h3>Paid or on account</h3><p>Cash counted per rider</p></div></div>
+    <div class="scen">
+      <div class="card pain"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Today</h3></div>
+        <ul class="clean"><li>Orders taken on a notebook by the phone</li><li>Nobody knows which customer still has 4 gallons</li><li>Regulars forgotten when they stop ordering</li><li>Rider cash counted from memory at night</li></ul></div>
+      <div class="card build"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>What I'd build</h3></div>
+        <ul class="clean"><li>Each regular’s usual order, repeated in one tap</li><li>Containers out, per customer</li><li>The rider’s run list for the day</li><li>Cash handed in per rider, per day</li></ul></div>
+      <div class="card reuse"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Carried over from Suki</h3></div>
+        <ul class="clean"><li>The store book and "what they bought last time"</li><li>"Gone quiet" alerts for regulars</li><li>Delivery role and status</li><li>Works where the rider has no signal</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SCENARIO 6 ═══════════ -->
+<section class="slide" data-title="If you run a clinic">
+  <div class="wrap">
+    <span class="eyebrow">Scenario 6 of 8</span>
+    <h2>If your business is <span class="grad">a clinic</span> — dental, vet or medical</h2>
+    <p class="sub">Bookings and walk-ins, a queue at the front desk, and patients who should come back.</p>
+    <div class="flow steps"><div class="node"><div class="k">Step 1</div><h3>Book</h3><p>By phone or at the desk</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 2</div><h3>Waiting</h3><p>Today’s queue on a tablet</p></div><div class="to">→</div><div class="node"><div class="k">Step 3</div><h3>Seen</h3><p>Notes and photos</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 4</div><h3>Billed</h3><p>Paid, or balance kept</p></div><div class="to">→</div><div class="node"><div class="k">Step 5</div><h3>Due back</h3><p>Reminder list</p></div></div>
+    <div class="scen">
+      <div class="card pain"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Today</h3></div>
+        <ul class="clean"><li>Appointments in a notebook, walk-ins on top</li><li>History on paper cards that go missing</li><li>Follow-ups depend on someone remembering</li><li>The day’s income added up at closing</li></ul></div>
+      <div class="card build"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>What I'd build</h3></div>
+        <ul class="clean"><li>A booking calendar and today’s queue</li><li>A patient card with history and photos</li><li>Bill, payments and balance per visit</li><li>A list of who is due back this week</li></ul></div>
+      <div class="card reuse"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Carried over from Suki</h3></div>
+        <ul class="clean"><li>A customer book with full history</li><li>Status: booked → waiting → seen → paid</li><li>Front desk vs doctor roles, enforced by the database</li><li>Photos that work offline</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SCENARIO 7 ═══════════ -->
+<section class="slide" data-title="If you build">
+  <div class="wrap">
+    <span class="eyebrow">Scenario 7 of 8</span>
+    <h2>If your business is <span class="grad">construction</span> — a contractor or builder</h2>
+    <p class="sub">Several sites at once, materials to order, and workers to pay every Saturday.</p>
+    <div class="flow steps"><div class="node"><div class="k">Step 1</div><h3>Site opens</h3><p>One page per project</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 2</div><h3>Materials asked</h3><p>By the foreman</p></div><div class="to">→</div><div class="node"><div class="k">Step 3</div><h3>Delivered to site</h3><p>Receipt photographed</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 4</div><h3>Attendance</h3><p>Taken on site, offline</p></div><div class="to">→</div><div class="node"><div class="k">Step 5</div><h3>Payroll + billing</h3><p>Adds itself up weekly</p></div></div>
+    <div class="scen">
+      <div class="card pain"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Today</h3></div>
+        <ul class="clean"><li>Material requests sent by text</li><li>Receipts kept in a plastic bag</li><li>Attendance on paper, per site</li><li>Payroll rebuilt in Excel every Saturday</li></ul></div>
+      <div class="card build"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>What I'd build</h3></div>
+        <ul class="clean"><li>Material requests per site, with a status</li><li>A photo of every receipt, filed to its site</li><li>Daily attendance from the foreman’s phone</li><li>Payroll and cost per site, ready on Saturday</li></ul></div>
+      <div class="card reuse"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Carried over from Suki</h3></div>
+        <ul class="clean"><li>Offline-first — sites rarely have signal</li><li>Status with who and when</li><li>Per-person week board</li><li>Photos stored on the phone until they can upload</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SCENARIO 8 ═══════════ -->
+<section class="slide" data-title="If you rent things out">
+  <div class="wrap">
+    <span class="eyebrow">Scenario 8 of 8</span>
+    <h2>If your business is <span class="grad">rentals</span> — cars, equipment, event supplies</h2>
+    <p class="sub">The same item cannot be in two places, and it has to come back in one piece.</p>
+    <div class="flow steps"><div class="node"><div class="k">Step 1</div><h3>Inquiry</h3><p>Is it free on the 14th?</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 2</div><h3>Reserved</h3><p>Deposit taken</p></div><div class="to">→</div><div class="node"><div class="k">Step 3</div><h3>Out</h3><p>Photos at hand-over</p></div><div class="to">→</div><div class="node hot"><div class="k">Step 4</div><h3>Returned</h3><p>Checked against the photos</p></div><div class="to">→</div><div class="node"><div class="k">Step 5</div><h3>Paid</h3><p>Balance settled</p></div></div>
+    <div class="scen">
+      <div class="card pain"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Today</h3></div>
+        <ul class="clean"><li>Double bookings, found out on the day</li><li>"Is it available?" answered from memory</li><li>Damage arguments with no photos</li><li>Deposits tracked on paper</li></ul></div>
+      <div class="card build"><div class="cardhead"><img class="icn mono" src="assets/lightning.png" alt=""><h3>What I'd build</h3></div>
+        <ul class="clean"><li>A calendar of what is out, and when</li><li>It refuses to book what is already out</li><li>Hand-over and return photos</li><li>Deposit and balance per booking</li></ul></div>
+      <div class="card reuse"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Carried over from Suki</h3></div>
+        <ul class="clean"><li>Catalogue with pictures and groups</li><li>The full status timeline</li><li>Photos that work offline</li><li>Staff vs owner roles</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ KEEP YOUR SPREADSHEET ═══════════ -->
+<section class="slide" data-title="Keep your spreadsheet" data-short>
+  <div class="wrap">
+    <span class="eyebrow">"We don't want to leave our spreadsheet"</span>
+    <h2>Keep it. The app can <span class="grad">read it and write to it</span>.</h2>
+    <p class="sub">An app can work with a Google Sheet instead of replacing it. The one rule: <b>every list has one place where it is typed</b>.</p>
     <div class="grid g3">
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/cross.png" alt=""><h3>Killed by the numbers</h3></div>
-        <ul class="clean">
-          <li>The delivery map</li>
-          <li>Money owed, as a screen of its own</li>
-          <li>Anything after "packed"</li>
-          <li>Reports for the boss</li>
-          <li>Undo sending an order</li>
-          <li>Discounts and free items</li>
-        </ul></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/info.png" alt=""><h3>Parked with a reason</h3></div>
-        <p class="sub" style="margin:0 0 8px"><b>Push notifications.</b> They need Firebase Cloud Messaging plus something server-side to send them. The wrapper has no Firebase and the app has no realtime — measured, not guessed. A phase of its own.</p>
-        <p class="sub" style="margin:0">What ships instead: the app checks on open and puts a count on the tab. "3 new."</p></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/crown.png" alt=""><h3>Why this matters</h3></div>
-        <p class="sub" style="margin:0">Four people use this app. A feature that only pays off once everybody is on it does not pay off. Each parked idea is recorded with <b>the number that parked it</b> — not with a shrug — so the argument does not have to be had twice.</p></div>
+      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>Sheet → app</h3></div>
+        <p class="sub" style="margin:0 0 8px"><b>Your sheet stays the price list.</b> The office edits products and prices in the sheet, as today. Every phone picks them up at its next sync.</p>
+        <span class="pill good">Safe</span></div>
+      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/check.png" alt=""><h3>App → sheet</h3></div>
+        <p class="sub" style="margin:0 0 8px"><b>Orders land in your sheet.</b> Every order becomes a new row, with a daily-totals tab. Your filters, formulas and pivot tables keep working.</p>
+        <span class="pill good">Safe</span></div>
+      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/warning.png" alt=""><h3>Both ways, same list</h3></div>
+        <p class="sub" style="margin:0 0 8px"><b>Possible, but I'd advise against it.</b> Two people change the same number in two places and the last one silently wins. A sheet has no "who is allowed", no history, and cannot be edited offline.</p>
+        <span class="pill warn">Risky</span></div>
     </div>
+    <div class="flow" style="margin-top:16px">
+      <div class="node"><div class="k">Month 1</div><h3>Nothing changes</h3><p>The sheet stays. The app reads it and writes orders into it.</p></div>
+      <div class="to">→</div>
+      <div class="node hot"><div class="k">Month 2</div><h3>One list moves</h3><p>Whichever hurts most — usually orders — is typed in the app only.</p></div>
+      <div class="to">→</div>
+      <div class="node"><div class="k">When they're ready</div><h3>The rest follow</h3><p>Or never. The sheet can stay a report for as long as they like it.</p></div>
+    </div>
+    <div class="note"><b>Learned the hard way on SukiRun:</b> prices started in a Google Sheet and moved into the app, because two places owning the same price quietly disagreed. A spreadsheet is a great report and a risky boss.</div>
   </div>
-  <div class="speaker"><b>Speaker</b>This is the answer to "how do you decide what to build?" — measure first, and write the number down next to the decision.</div>
+  <div class="speaker"><b>Speaker</b>This answers the objection before it is raised: nobody has to throw anything away on day one. The app joins their sheet, then earns its place one list at a time.</div>
 </section>
 
-<!-- ═══════════ 19 · NUMBERS ═══════════ -->
-<section class="slide" data-title="By the numbers">
+<!-- ═══════════ 19 · HOW I WORK ═══════════ -->
+<section class="slide" data-title="How I work">
   <div class="wrap">
-    <span class="eyebrow">Measured, not remembered</span>
-    <h2>By the numbers</h2>
+    <span class="eyebrow">How I work</span>
+    <h2>I measure before I build</h2>
+    <p class="sub">The app records what really happens, so I decide from that — not from guessing.</p>
     <div class="grid g4">
-      <div class="card tight"><div class="kpi acc">13,500</div><div class="lbl">Lines of JavaScript · 513 functions</div></div>
-      <div class="card tight"><div class="kpi acc">3,900</div><div class="lbl">Lines of PostgreSQL across 24 migrations</div></div>
-      <div class="card tight"><div class="kpi acc">8 / 29</div><div class="lbl">Tables and functions · RLS on every table</div></div>
-      <div class="card tight"><div class="kpi acc">55</div><div class="lbl">Releases, each one installed by hand</div></div>
+      <div class="card tight"><div class="kpi acc">1</div><div class="lbl">Follow the work</div><p class="sub" style="margin:8px 0 0;font-size:13px">Find every place something is written down twice.</p></div>
+      <div class="card tight"><div class="kpi acc">2</div><div class="lbl">Build for both ends</div><p class="sub" style="margin:8px 0 0;font-size:13px">The phone in the field and the PC in the office.</p></div>
+      <div class="card tight"><div class="kpi acc">3</div><div class="lbl">Test in the real app</div><p class="sub" style="margin:8px 0 0;font-size:13px">On a phone and on a PC, with made-up data — never a real customer's.</p></div>
+      <div class="card tight"><div class="kpi acc">4</div><div class="lbl">Ship one version</div><p class="sub" style="margin:8px 0 0;font-size:13px">With what changed written in plain words for the people using it.</p></div>
     </div>
+    <div class="note" style="margin-top:18px"><b>What I chose not to build is part of the work.</b> A map of shops, reports and payment tracking were all designed — and parked, because the data showed nobody would use them yet. A screen nobody opens is cost, not value.</div>
     <div class="grid g4" style="margin-top:14px">
-      <div class="card tight"><div class="kpi">4.7 MB</div><div class="lbl">Signed APK, photographs included</div></div>
-      <div class="card tight"><div class="kpi">200+</div><div class="lbl">Products in the catalogue</div></div>
-      <div class="card tight"><div class="kpi">0</div><div class="lbl">Frameworks · 0 build step for the app itself</div></div>
-      <div class="card tight"><div class="kpi">₱0</div><div class="lbl">Running cost — free tiers throughout</div></div>
+      <div class="card tight"><div class="kpi">56</div><div class="lbl">Releases</div></div>
+      <div class="card tight"><div class="kpi">200+</div><div class="lbl">Products, with pictures</div></div>
+      <div class="card tight"><div class="kpi">4.7 MB</div><div class="lbl">Android app</div></div>
+      <div class="card tight"><div class="kpi">₱0</div><div class="lbl">Running cost</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ 20 · STACK ═══════════ -->
-<section class="slide" data-title="Stack">
-  <div class="wrap">
-    <span class="eyebrow">What it is made of</span>
-    <h2>Stack</h2>
-    <div class="grid g3">
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/layer-up.png" alt=""><h3>Front end</h3></div>
-        <ul class="clean">
-          <li>Vanilla JavaScript — no framework, no bundler</li>
-          <li>CSS custom properties, light and dark</li>
-          <li>IndexedDB for photographs and map tiles</li>
-          <li>MapLibre GL · OpenFreeMap</li>
-        </ul></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/encrypted.png" alt=""><h3>Back end</h3></div>
-        <ul class="clean">
-          <li>Supabase — Postgres, Auth, Storage</li>
-          <li>Row-level security on every table</li>
-          <li>29 <span class="mono">security definer</span> functions</li>
-          <li>24 hand-written SQL migrations</li>
-        </ul></div>
-      <div class="card"><div class="cardhead"><img class="icn mono" src="assets/gear.png" alt=""><h3>Build and ship</h3></div>
-        <ul class="clean">
-          <li>Python build, catalogue and release tooling</li>
-          <li>Android WebView wrapper · <span class="mono">aapt2</span> · <span class="mono">d8</span> · <span class="mono">apksigner</span></li>
-          <li>Git · GitHub Releases as the update channel</li>
-        </ul></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 21 · THANK YOU ═══════════ -->
-<section class="slide" data-title="Thank you">
+<!-- ═══════════ 20 · THANK YOU ═══════════ -->
+<section class="slide" data-title="Thank you" data-short>
   <div class="wrap" style="display:flex;flex-direction:column;justify-content:center;min-height:calc(100vh - 170px)">
     <span class="eyebrow"><img class="icn tint" style="width:13px;height:13px" src="assets/star.png" alt="">SukiRun</span>
-    <h1>Built for four people, <span class="grad">properly</span>.</h1>
-    <p class="sub" style="max-width:62ch">No framework, no server, no signal required. The interesting constraints were not technical — they were a phone in a stranger's hand and four colleagues who know each other.</p>
+    <h1>Tell me how your business runs — <span class="grad">I'll show you where the retyping is</span>.</h1>
+    <p class="sub" style="max-width:62ch">Distributor, store, kitchen, clinic, site or rental yard: the lists are the same, and so is the fix. One app that the field and the office both use.</p>
     <div class="grid g3" style="margin-top:22px">
       <div class="card"><div class="cardhead"><h3>Guile Pitogo</h3></div>
         <ul class="clean">
           <li>Bacolod City, Negros Occidental</li>
           <li><span class="mono">guile.pitogo@gmail.com</span></li>
-          <li><span class="mono">0968 766 7688</span></li>
         </ul></div>
       <div class="card"><div class="cardhead"><h3>More work</h3></div>
         <ul class="clean">
@@ -551,21 +620,22 @@ TOTAL: ₱546</pre>
           <li>Kokoro SRT Studio — browser TTS with word-level captions</li>
           <li>Shindo Thumbnail Maker</li>
         </ul></div>
-      <div class="card"><div class="cardhead"><h3>Also</h3></div>
+      <div class="card"><div class="cardhead"><h3>The app</h3></div>
         <ul class="clean">
-          <li>Two independent networks, designed and remotely run</li>
-          <li>pfSense · OpenWrt · VLANs · FQ-CoDel</li>
-          <li>YouTube — 15,000+ subscribers</li>
+          <li><a class="try small" href="https://deadeyezjhin.github.io/sukirun-deck/demo/" target="_blank" rel="noopener">▶ Try the live demo</a></li>
+          <li>Android + any web browser</li>
+          <li>Releases: <span class="mono">github.com/DeadEyeZJhin/sukirun-releases</span></li>
+          <li>Works offline, syncs when it can</li>
         </ul></div>
     </div>
     <p class="sub" style="margin-top:18px;font-size:12.5px;color:var(--dim)">
-      Screenshots use invented shops and orders. No real customer, shop or total appears in this deck.
+      Screenshots use an invented company, invented shops and invented people. No real customer, shop, person or total appears in this deck.
     </p>
   </div>
 </section>
 
 </main>
 
-<script src="deck.js?v=4"></script>
+<script src="deck.js?v=13"></script>
 </body>
 </html>

@@ -452,12 +452,14 @@ h1,h2,h3,.kpi{font-family:var(--display);letter-spacing:-.01em}
   border-style:dashed;border-color:var(--stroke-strong);
   font:500 11.5px/1.5 var(--mono);color:var(--dim);padding:14px;text-align:center;
 }
-/* the office screen is landscape, so it gets a wider column and its own ratio */
-.shot.wide{width:430px}
-.shot.wide .frame{aspect-ratio:2080/1640;border-radius:14px;border-width:6px}
-.appsplit.wide{grid-template-columns:minmax(0,1fr) 430px}
+/* The office screen is a desktop screenshot: it needs WIDTH to stay readable, so it
+   takes the larger column and the words are squeezed into a fixed one beside it. */
+.appsplit.wide{grid-template-columns:330px minmax(0,1fr)}
+.shot.wide{width:100%}
+.shot.wide .frame{aspect-ratio:820/700;border-radius:12px;border-width:5px}
+.shot.wide .frame img{object-fit:fill}
 @media (max-width:1100px){.appsplit.wide{grid-template-columns:1fr}
-  .appsplit.wide .shot{width:min(430px,100%);margin:0 auto}}
+  .appsplit.wide .shot{width:100%;margin:0}}
 
 /* a wide screenshot of the office screen, no phone frame */
 .screenwide{border:1px solid var(--stroke);border-radius:var(--radius);overflow:hidden;
@@ -481,3 +483,140 @@ h1,h2,h3,.kpi{font-family:var(--display);letter-spacing:-.01em}
 @media print{
   .appsplit{grid-template-columns:1fr .5fr;min-height:auto;page-break-inside:avoid}
 }
+
+
+/* ------------------------------------------------------------------
+   The office slide's screenshot.
+   `.appsplit .shot{width:248px}` is declared further up and has the same
+   specificity, so these have to be qualified to win. A desktop screenshot
+   needs WIDTH to stay readable: it takes the big column, the words take a
+   fixed one beside it.
+   ------------------------------------------------------------------ */
+.appsplit.wide{grid-template-columns:340px minmax(0,1fr);gap:30px}
+/* 845px keeps the capture at ~1:1, which is the point: any smaller and the office
+   screen stops being readable. 660px tall + caption clears the slide's 760px. */
+.appsplit .shot.wide{width:min(100%,820px);margin:0}
+.appsplit .shot.wide .frame{aspect-ratio:820/700;border-radius:12px;border-width:5px}
+.appsplit .shot.wide .frame img{object-fit:contain}
+@media (max-width:1100px){
+  .appsplit.wide{grid-template-columns:1fr}
+  .appsplit .shot.wide{width:100%;margin:0}
+}
+
+/* ==================================================================
+   2026-09 rebuild: the boss-facing deck
+   ================================================================== */
+
+/* Desktop captures are 1280x800. They keep their own ratio, cropped from the top. */
+.appsplit .shot.wide.desk .frame,.shot.wide.desk .frame{aspect-ratio:4/3}
+.appsplit .shot.wide.desk .frame img,.shot.wide.desk .frame img{object-fit:cover;object-position:top}
+
+/* a phone beside a desktop capture, on one row */
+.pair{display:grid;grid-template-columns:200px auto;justify-content:start;gap:24px;align-items:start;margin-top:6px}
+.pair .shot{width:200px}
+.pair .shot.wide{width:min(100%, calc((100vh - 370px) * 1.333))}
+.pair.three{grid-template-columns:200px auto minmax(200px,280px);justify-content:start}
+.pair.three .side{display:flex;flex-direction:column;gap:10px}
+@media (max-width:1100px){.pair.three{grid-template-columns:200px minmax(0,1fr)}.pair.three .side{grid-column:1 / -1;flex-direction:row;flex-wrap:wrap}.pair.three .side .card{flex:1 1 200px}}
+@media (max-width:900px){.pair,.pair.three{grid-template-columns:1fr}.pair .shot{margin:0 auto}.pair .shot.wide{width:100%}}
+
+/* two or three phones in the right-hand column */
+.appsplit.two{grid-template-columns:minmax(0,1fr) 440px}
+.appsplit.two .shots{gap:18px;flex-wrap:nowrap}
+.appsplit.two .shot{width:210px}
+@media (max-width:1000px){.appsplit.two{grid-template-columns:1fr}.appsplit.two .shots{flex-wrap:wrap}}
+
+/* Before -> after, one row per thing a spreadsheet used to hold */
+.ba{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1.25fr);gap:10px 8px;align-items:stretch}
+.ba .was,.ba .now{border-radius:12px;padding:11px 14px;font-size:13.6px;line-height:1.45;border:1px solid var(--stroke)}
+.ba .was{background:var(--panel-2);color:var(--muted)}
+.ba .was b{color:var(--text);font-weight:600}
+.ba .now{background:var(--panel);box-shadow:var(--glow)}
+.ba .now b{color:var(--accent)}
+.ba .arr{display:flex;align-items:center;justify-content:center;color:var(--accent);font:800 18px var(--mono)}
+.ba .head{font:600 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);padding:0 2px}
+@media (max-width:760px){.ba{grid-template-columns:1fr}.ba .arr{transform:rotate(90deg);height:18px}.ba .head.h2{display:none}}
+
+/* A left-to-right flow of boxes with arrows between them: sync, receipt -> stock */
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:6px 0 4px}
+.flow .node{flex:1 1 150px;min-width:140px;border:1px solid var(--stroke);border-radius:14px;
+  background:var(--panel);padding:13px 14px;box-shadow:var(--shadow)}
+.flow .node .k{font:600 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.flow .node h3{margin:0 0 4px;font-size:16px}
+.flow .node p{margin:0;font-size:12.8px;color:var(--muted);line-height:1.5}
+.flow .node.hot{border-color:color-mix(in srgb,var(--accent) 55%,transparent);box-shadow:var(--glow)}
+.flow .node.off{border-style:dashed}
+.flow .to{flex:0 0 34px;display:flex;align-items:center;justify-content:center;color:var(--accent);font:800 18px var(--mono)}
+@media (max-width:760px){.flow{flex-direction:column}.flow .to{transform:rotate(90deg);height:26px;flex-basis:26px}}
+
+/* One business type: the pain, the app, and what carries over from SukiRun */
+.scen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:4px}
+.scen .card h3{font-size:15px}
+.scen .card.pain{border-color:color-mix(in srgb,var(--bad) 35%,transparent)}
+.scen .card.build{border-color:color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:var(--glow)}
+.scen .card.reuse{border-color:color-mix(in srgb,var(--good) 35%,transparent)}
+.scen ul.clean li{font-size:13.4px}
+@media (max-width:900px){.scen{grid-template-columns:1fr}}
+
+/* the four lists every business keeps */
+.four{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.four .card{text-align:center;padding:16px 10px}
+.four .big{font-size:30px;line-height:1;margin-bottom:8px}
+.four h3{margin:0 0 4px;font-size:16px}
+.four p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
+@media (max-width:900px){.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* A projector at 1280x720 is the likeliest room this is shown in. Short screens get
+   phones sized by the HEIGHT left over, and tighter type, so no slide needs a scroll. */
+@media (min-width:1001px) and (max-height:800px){
+  .slide{padding-top:66px;padding-bottom:54px}
+  h1{font-size:clamp(30px,4.4vw,52px)}
+  h2{font-size:clamp(22px,2.5vw,32px)}
+  .sub{font-size:14px;line-height:1.5;margin-bottom:12px}
+  .eyebrow{margin-bottom:8px}
+  .card.tight{padding:9px 12px}
+  .cardhead{margin-bottom:6px}
+  ul.clean li{margin:3px 0;font-size:12.8px;line-height:1.45}
+  .note{margin-top:10px;padding:9px 12px}
+  .cover-badges{margin-top:16px}
+  .appsplit{min-height:auto}
+  .shot .cap{margin-top:6px}
+  .shots .shot,.appsplit .shot:not(.wide),.appsplit.two .shot,.pair .shot:not(.wide){
+    width:min(212px, calc((100vh - 335px) * .45))}
+  .appsplit.two{grid-template-columns:minmax(0,1fr) auto}
+  .pair{grid-template-columns:auto minmax(0,1fr)}
+  .pair.three{grid-template-columns:auto auto minmax(190px,280px);justify-content:start}
+  .appsplit .shot.wide.desk{width:min(100%, calc((100vh - 250px) * 1.333))}
+  .pair .shot.wide{width:min(100%, calc((100vh - 370px) * 1.333))}
+}
+
+/* The sync slide: the phone, the steps between, the office PC */
+.syncrow{display:grid;grid-template-columns:auto minmax(240px,1fr) auto;gap:26px;align-items:center;margin-top:4px}
+.syncrow .shot{width:min(200px, calc((100vh - 450px) * .45))}
+.syncrow .shot.wide{width:min(520px, calc((100vh - 450px) * 1.333))}
+.flow.v{flex-direction:column;margin:0}
+.flow.v .node{flex:0 0 auto;min-width:0}
+.flow.v .to{flex:0 0 26px;height:26px}
+@media (max-width:1000px){.syncrow{grid-template-columns:1fr}.syncrow .shot{margin:0 auto;width:200px}.syncrow .shot.wide{width:100%}}
+.syncnotes .card{padding:10px 14px}
+.syncnotes .sub{font-size:13.2px !important;line-height:1.5}
+.flow.v .node{padding:10px 13px}
+/* a business's work, five steps, above its three cards */
+.flow.steps{margin:4px 0 16px}
+.flow.steps .node{flex:1 1 120px;min-width:118px;padding:10px 12px}
+.flow.steps .node h3{font-size:14.5px}
+.flow.steps .node p{font-size:12.3px}
+.flow.steps .to{flex-basis:26px}
+@media (max-width:760px){.flow .node,.flow.steps .node{flex:0 0 auto}}
+@media (max-width:600px){.topbar .btn span{display:none}.topbar .btn{padding-inline:10px}.brand small{display:none}}
+
+/* zoomed office captures keep their own shape, and may use more width since they are short */
+.shot.wide.desk.zoom .frame{aspect-ratio:var(--ar)}
+.pair .shot.wide.zoom{width:min(100%, calc((100vh - 400px) * 2.4))}
+@media (min-width:1001px) and (max-height:800px){.pair .shot.wide.zoom{width:min(100%, calc((100vh - 380px) * 2.4))}}
+/* the one link that matters: try it */
+a.try{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;text-decoration:none;
+  font:700 14.5px var(--sans);color:#fff;background:linear-gradient(100deg,var(--accent),#FF8A5B);
+  box-shadow:0 10px 30px color-mix(in srgb,var(--accent) 35%,transparent)}
+a.try:hover{filter:brightness(1.08)}
+a.try.small{padding:6px 12px;font-size:12.5px;box-shadow:none}

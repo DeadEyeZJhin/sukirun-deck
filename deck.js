@@ -11,30 +11,52 @@
 /* ============================================================
    1. NAVIGATION
    ============================================================ */
-const slides  = [...document.querySelectorAll('.slide')];
+/* SHORT and FULL. Short is the dozen slides said out loud in a room (data-short); Full
+   adds the eight business scenarios and the rest, for reading on your own. Navigation,
+   the rail, the counter and deep links all count only the slides in the chosen set. */
+const allSlides = [...document.querySelectorAll('.slide')];
+let slides  = allSlides;
 const rail    = document.getElementById('rail');
 const counter = document.getElementById('counter');
 const prog    = document.getElementById('prog');
 const root    = document.documentElement;
 let dots = [], idx = 0;
 
-slides.forEach((s, i) => {
-  const b = document.createElement('button');
-  b.dataset.t = String(i + 1).padStart(2, '0') + ' · ' + (s.dataset.title || '');
-  b.addEventListener('click', () => go(i));
-  rail.appendChild(b);
-});
-dots = [...rail.children];
+function buildRail(){
+  rail.innerHTML = '';
+  slides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.dataset.t = String(i + 1).padStart(2, '0') + ' · ' + (s.dataset.title || '');
+    b.addEventListener('click', () => go(i));
+    rail.appendChild(b);
+  });
+  dots = [...rail.children];
+}
 
 function go(i){
   idx = Math.max(0, Math.min(slides.length - 1, i));
   slides.forEach((s, k) => s.classList.toggle('on', k === idx));
+  allSlides.forEach(s => { if (!slides.includes(s)) s.classList.remove('on'); });
   dots.forEach((d, k) => d.classList.toggle('on', k === idx));
   counter.innerHTML = '<b>' + String(idx + 1).padStart(2, '0') + '</b> / ' + slides.length;
-  prog.style.width = (idx / (slides.length - 1) * 100) + '%';
+  prog.style.width = (slides.length > 1 ? idx / (slides.length - 1) * 100 : 0) + '%';
   slides[idx].scrollTop = 0;
-  if (location.hash !== '#' + (idx + 1)) history.replaceState(null, '', '#' + (idx + 1));
+  if (location.hash !== '#' + (idx + 1)) history.replaceState(null, '', location.pathname + location.search + '#' + (idx + 1));
 }
+
+function applySet(mode, keepSlide){
+  const short = mode === 'short';
+  const current = slides[idx];
+  allSlides.forEach(s => s.classList.toggle('off-deck', short && !s.hasAttribute('data-short')));
+  slides = allSlides.filter(s => !s.classList.contains('off-deck'));
+  buildRail();
+  document.querySelectorAll('[data-set]').forEach(b => b.classList.toggle('on', b.dataset.set === mode));
+  try { localStorage.setItem('suki-set', mode); } catch(e){}
+  const at = keepSlide && current ? slides.indexOf(current) : -1;
+  go(at >= 0 ? at : 0);
+}
+document.querySelectorAll('[data-set]').forEach(b =>
+  b.addEventListener('click', () => applySet(b.dataset.set, true)));
 
 document.getElementById('nextBtn').onclick = () => go(idx + 1);
 document.getElementById('prevBtn').onclick = () => go(idx - 1);
@@ -70,6 +92,10 @@ document.getElementById('fsBtn')?.addEventListener('click', toggleFs);
 document.getElementById('notesBtn')?.addEventListener('click',
   () => document.body.classList.toggle('notes'));
 
+// ?short or ?full in the address wins, then what this browser chose last, then Full
+let startSet = /[?&]short/.test(location.search) ? 'short' : /[?&]full/.test(location.search) ? 'full' : null;
+if (!startSet){ try { startSet = localStorage.getItem('suki-set'); } catch(e){} }
+applySet(startSet === 'short' ? 'short' : 'full', false);
 go((parseInt(location.hash.slice(1)) - 1) || 0);
 
 /* deep links: index.html#7 jumps to slide 7 without a reload */
