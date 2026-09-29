@@ -70,7 +70,9 @@ python make_demo.py            # reads D:\Order Run\sukirun.built.html
 It blanks the server address, its key and the update address (with no server the app skips
 login, opens all five roles and keeps every save in the browser), renames the company,
 drops any product with no picture (the APK's built-in list still carries two the office deleted
-on the server; the real app forgets them on sync, the demo never syncs), runs `demo-src/seed.js` before the app to load the invented shops and a month of orders
+on the server; the real app forgets them on sync, the demo never syncs), re-saves the HD product photos at 520 px (only the full-screen view uses them; 7.4 MB page
+becomes 5.0), adds `window.__demoRole(role)` so the portfolio's phone can switch role
+without reloading, runs `demo-src/seed.js` before the app to load the invented shops and a month of orders
 dated relative to today, and adds a strip with **Reset demo**. It refuses to write the file
 if the server address survives anywhere in it. Re-run it after each app release.
 

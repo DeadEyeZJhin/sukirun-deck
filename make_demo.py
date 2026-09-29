@@ -54,6 +54,34 @@ kept = [p for p in builtin if p.get('img')]
 html = html[:m.end()] + json.dumps(kept, ensure_ascii=False) + html[end:]
 gone = sorted({p['name'] for p in builtin if not p.get('img')})
 
+# 2c. a lighter page. The HD photos (only drawn when a product is opened full screen) are
+#     4.25 MB of the 7.4; re-saved at 520 px they look the same on a phone and weigh a
+#     quarter. The app itself is untouched: this is the demo's copy.
+import base64
+from PIL import Image
+def smaller(uri, box=520, q=64):
+    head, data = uri.split(',', 1)
+    im = Image.open(io.BytesIO(base64.b64decode(data)))
+    if max(im.size) <= box:
+        return uri
+    im.thumbnail((box, box), Image.LANCZOS)
+    out = io.BytesIO()
+    im.save(out, 'WEBP', quality=q, method=6)
+    return 'data:image/webp;base64,' + base64.b64encode(out.getvalue()).decode()
+m = re.search(r'const DEFAULT_PRODUCTS = ', html)
+builtin, end = json.JSONDecoder().raw_decode(html, m.end())
+for p in builtin:
+    if p.get('imgHD'):
+        p['imgHD'] = smaller(p['imgHD'])
+html = html[:m.end()] + json.dumps(builtin, ensure_ascii=False) + html[end:]
+
+# 2d. switching role without a reload: the portfolio's phone calls this instead of opening
+#     the whole 3 MB page again. goHome() clears the screen the way Back does.
+hook = '  function enterRole(roleId){'
+if html.count(hook) != 1:
+    raise SystemExit('enterRole not found')
+html = html.replace(hook, '  window.__demoRole = function(r){ goHome(); enterRole(r); };\n' + hook, 1)
+
 # 3 + 4. the seed, and the strip
 products = [p for p in json.load(io.open(PRODUCTS, encoding='utf-8')) if p.get('img')]
 slim = [{'id': p['id'], 'name': p['name'], 'price': p.get('price', 0), 'unit': p.get('unit', ''),
