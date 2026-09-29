@@ -1,7 +1,8 @@
 /* SukiRun demo — the invented company, loaded once per browser before the app starts.
  *
  * Everything here is made up: Demo Distribution Co., its people, its shops and its orders.
- * The products are the 76 that ship inside the public Android app. The orders are dated
+ * The products are the ones that ship inside the public Android app, less any with no picture
+ * (make_demo.py drops those: two were deleted on the server long ago). The orders are dated
  * relative to TODAY, so "this week" and "this month" are never empty however old the demo is.
  *
  * Nothing leaves the browser. The demo build has no server address at all (make_demo.py

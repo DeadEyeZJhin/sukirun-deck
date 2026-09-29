@@ -42,13 +42,27 @@ if k != 1:
     raise SystemExit('COMPANY not found')
 html = html.replace('<title>Suki \u2014 Store Orders</title>', '<title>SukiRun demo \u2014 Demo Distribution Co.</title>')
 
+# 2b. no product without a picture. The list that ships inside the app still carries two
+#     the office deleted on the server long ago (Season's Burger and Mayo Dressing 1L);
+#     the real app drops them when it syncs, but the demo never syncs. Same rule for both
+#     copies of the list: the app's built-in one and the seed's.
+m = re.search(r'const DEFAULT_PRODUCTS = ', html)
+if not m:
+    raise SystemExit('DEFAULT_PRODUCTS not found')
+builtin, end = json.JSONDecoder().raw_decode(html, m.end())
+kept = [p for p in builtin if p.get('img')]
+html = html[:m.end()] + json.dumps(kept, ensure_ascii=False) + html[end:]
+gone = sorted({p['name'] for p in builtin if not p.get('img')})
+
 # 3 + 4. the seed, and the strip
-products = json.load(io.open(PRODUCTS, encoding='utf-8'))
+products = [p for p in json.load(io.open(PRODUCTS, encoding='utf-8')) if p.get('img')]
 slim = [{'id': p['id'], 'name': p['name'], 'price': p.get('price', 0), 'unit': p.get('unit', ''),
          'img': bool(p.get('img'))} for p in products]
 seed = io.open(os.path.join(ROOT, 'demo-src', 'seed.js'), encoding='utf-8').read()
+# '+catalog2': a browser that opened the demo before this fix gets the invented data again,
+# without the two dead products
 seed = (seed.replace('__DEMO_PRODUCTS__', json.dumps(slim, ensure_ascii=False))
-            .replace('__DEMO_VERSION__', version).replace('__DEMO_BUILD__', str(code)))
+            .replace('__DEMO_VERSION__', version + '+catalog2').replace('__DEMO_BUILD__', str(code)))
 strip = '''<style>
   .home-mark{display:none !important}
   #demo-strip{position:fixed;left:0;right:0;bottom:0;z-index:99999;display:flex;gap:10px;align-items:center;
